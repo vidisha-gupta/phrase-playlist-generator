@@ -17,4 +17,13 @@ spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id = SPOTIPY_CLIENT_I
                                                     redirect_uri = SPOTIPY_REDIRECT_URI, scope = scope))
 
 def createEmptyPlaylist():
-    spotify.user_playlist_create(user=spotify.me()['id'], name="i loveeeee akibabi hehehhe", public=True, collaborative=False, description="test ooh ahh abolish man, return to monke")
+    newPlaylist = spotify.user_playlist_create(user=spotify.me()['id'], name="i loveeeee akibabi hehehhe", public=True, collaborative=False, description="test ooh ahh abolish man, return to monke")
+    return newPlaylist["id"]
+
+def add(user, playlist_id, tracks):
+    print()
+    spotify.user_playlist_add_tracks(user=spotify.me()['id'], playlist_id=playlist_id, tracks=tracks, position=None)
+
+coolPlaylist = createEmptyPlaylist()
+songzzz = ["spotify:track:7GhIk7Il098yCjg4BQjzvb"]
+add(spotify.me()['id'], coolPlaylist, songzzz)
