@@ -16,11 +16,14 @@
       <form>
         <div class="form-group">
           <label for="phrase">Phrase</label>
-          <textarea class="form-control" id="phrase" rows="3" placeholder="Your Phrase Here" required></textarea>
+          <textarea class="form-control" id="phrase" rows="3" placeholder="Your Phrase Here" required minlength=2 maxlength=100></textarea>
         </div>
         <button class="btn btn-success btn-lg" type="submit" onsubmit="">Create a Playlist</button>
       </form>
+      <h5>Ouput</h5>
+      <p id="output">{{output}}</p>
     </div>
+    <!-- Our JavaScript -->
     <script src="script.js"></script>
 </body> 
-</html>
+</html> 

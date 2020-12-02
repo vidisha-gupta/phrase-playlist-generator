@@ -16,5 +16,8 @@ SPOTIPY_REDIRECT_URI= os.getenv("REDIRECT_URI")
 spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id = SPOTIPY_CLIENT_ID, client_secret = SPOTIPY_CLIENT_SECRET,
                                                     redirect_uri = SPOTIPY_REDIRECT_URI, scope = scope))
 
-def createEmptyPlaylist():
-    spotify.user_playlist_create(user=spotify.me()['id'], name="i loveeeee akibabi hehehhe", public=True, collaborative=False, description="test ooh ahh abolish man, return to monke")
+def create_empty_playlist():
+    spotify.user_playlist_create(user=spotify.me()['id'], name="test playlist", public=True, collaborative=False, description="test")
+
+def test_string(): 
+    return "String from auth.py"
