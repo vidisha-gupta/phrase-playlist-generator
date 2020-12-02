@@ -1,5 +1,4 @@
-from flask import Flask, render_template
-from auth import test_string
+from flask import Flask, render_template, request
 
 #import auth as auth (to use everything in file)
 # or 
@@ -7,9 +6,12 @@ from auth import test_string
 
 app = Flask(__name__, template_folder='templates')
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def index():
-    output = test_string()
+    if request.method == 'GET':
+        output = ""
+    else:
+        output = request.form['phrase']
     return render_template('index.html', output=output)
 
 if __name__ == '__main__':
