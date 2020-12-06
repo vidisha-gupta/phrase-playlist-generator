@@ -14,21 +14,31 @@ def create_empty_playlist():
         return new_playlist["id"]
 
 def add_song(playlist_id, track):
-    results = spotify.search(q='track:' + track, type='track', limit=50)
-    if len(results['tracks']) > 0:
-        i = 0 
-        top_track = None
-        for i in range(len(results['tracks'])):
-            print(results['tracks']['items'][i]['name'])
-            if (results['tracks']['items'][i]['name'].lower() == track.lower()):
-                top_track = results['tracks']['items'][i]['uri']
-                break
-        if top_track != None:
-            tracks = [top_track]
-            spotify.user_playlist_add_tracks(user=spotify.me()['id'], playlist_id=playlist_id, tracks=tracks, position=None)
-            print('\nTrack was added!\n')
-        else:
-            print('\nTrack was not found :(\n')
+    limit = 50
+    initial_results = spotify.search(q='track:' + track, type='track', limit=limit)
+    found = False
+    j = 0
+    if len(initial_results['tracks']) > 0:
+        while(not found and j < 2000):
+            results = spotify.search(q='track:' + track, type='track', offset=j, limit=limit)
+            top_track = None
+            for i in range(len(results['tracks'])):
+                try: 
+                    if (results['tracks']['items'][i]['name'].lower() == track.lower()):
+                        top_track = results['tracks']['items'][i]['uri']
+                        found = True
+                        break
+                except IndexError:
+                    print("nothing")
+                    return None
+
+            j+=7
+            if top_track != None:
+                tracks = [top_track]
+                spotify.user_playlist_add_tracks(user=spotify.me()['id'], playlist_id=playlist_id, tracks=tracks, position=None)
+                print('\nTrack was added!\n')
+            else:
+                print('\nTrack was not found :(\n')
 
 
 
