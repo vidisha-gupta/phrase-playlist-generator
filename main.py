@@ -1,6 +1,4 @@
-# this file is for testing purposes
-from playlist import *
+# CONSOLE TESTING
+from playlist import create_playlist
 
-# playlist = create_empty_playlist()
-# add_song(playlist, "call me maybe")
-create_sentence_playlist("cheese")
+create_playlist("hi hello hi")

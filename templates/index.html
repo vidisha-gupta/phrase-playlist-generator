@@ -15,13 +15,14 @@
       <br>
       <form method="POST">
         <div class="form-group">
-          <label for="phrase">Phrase</label>
+          <label for="phrase" style="width: 50%; margin: auto;">Phrase</label>
           <textarea class="form-control" name="phrase" id="phrase" rows="3" placeholder="Your Phrase Here" minlength=2 maxlength=100 required></textarea>
         </div>
         <button class="btn btn-success btn-lg" type="submit" onsubmit="">Create a Playlist</button>
       </form>
       <h5>Ouput</h5>  
       <p id="output">{{output}}</p>
+      <iframe src="{{link}}" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
     </div>
     <!-- Our JavaScript -->
     <script src="script.js"></script>

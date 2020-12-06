@@ -1,18 +1,21 @@
 from flask import Flask, render_template, request
-
-#import auth as auth (to use everything in file)
-# or 
-# from auth import <Class> (to use everything in Class)
+from playlist import create_playlist
 
 app = Flask(__name__, template_folder='templates')
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    if request.method == 'GET':
-        output = ""
-    else:
-        output = request.form['phrase']
-    return render_template('index.html', output=output)
+    link = ""
+    output = ""
+    if request.method == 'POST':
+        playlist_uri = create_playlist(request.form['phrase'])
+        if not playlist_uri: 
+            output = "No songs were found. Please try again."
+        else:
+            link = f"https://open.spotify.com/embed/playlist/{playlist_uri}"
+            output = f"Your playlist was created! Some songs may be missing if they were not found."
+
+    return render_template('index.html', output=output, link=link)
 
 if __name__ == '__main__':
     app.run()    

@@ -1,75 +1,63 @@
 from auth import spotify
+import time
+start_time = time.time()
 
-def create_sentence_playlist(sentence): 
-    playlistid = create_empty_playlist()
-    split_sentence = sentence.split(" ")
-    for i in range(len(split_sentence)):
-        add_song(playlistid, split_sentence[i])
+def create_playlist(sentence):
+    """Creates the phrase playlist.
 
+    Args:
+        sentence (str): the phrase that will be turned into a playlist. 
 
+    Returns:
+        the uri of the generated phrase playlist.
+    """ 
+    tokens = sentence.split(' ')
 
-def create_empty_playlist():
-        new_playlist = spotify.user_playlist_create(user=spotify.me()['id'], name="Test Playlist", public=True, collaborative=False, description="another test")
-        print('\nPlaylist was created!\n')
-        return new_playlist["id"]
+    # removes null results from songs list by checking whether token_to_song(token) would return None
+    songs = list(filter(None, map(token_to_song, tokens)))
 
-def add_song(playlist_id, track):
-    limit = 50
-    initial_results = spotify.search(q='track:' + track, type='track', limit=limit)
-    found = False
-    j = 0
-    if len(initial_results['tracks']) > 0:
-        while(not found and j < 2000):
-            results = spotify.search(q='track:' + track, type='track', offset=j, limit=limit)
-            top_track = None
-            for i in range(len(results['tracks'])):
-                try: 
-                    if (results['tracks']['items'][i]['name'].lower() == track.lower()):
-                        top_track = results['tracks']['items'][i]['uri']
-                        found = True
-                        break
-                except IndexError:
-                    print("nothing")
-                    return None
+    # if songs is not empty, create a playlist and add the songs array to the playlist
+    if songs:
+        # create an empty playlist
+        playlist = spotify.user_playlist_create(user=spotify.me()['id'], name="Your Phrase Playlist", public=True, collaborative=False, 
+                                                description="Created using the Spotify Phrase Playlist Generator: https://github.com/vidisha-gupta/phrase-playlist-generator.")
+        # add songs list to the playlist
+        spotify.user_playlist_add_tracks(user=spotify.me()['id'], playlist_id=playlist['id'], tracks=songs, position=None)
+        return playlist['uri'].replace("spotify:playlist:", "")
 
-            j+=7
-            if top_track != None:
-                tracks = [top_track]
-                spotify.user_playlist_add_tracks(user=spotify.me()['id'], playlist_id=playlist_id, tracks=tracks, position=None)
-                print('\nTrack was added!\n')
-            else:
-                print('\nTrack was not found :(\n')
+    print(f"Program took {time.time() - start_time} seconds")
+        
 
+def token_to_song(token):
+    """Finds a song whose title is the token, ignoring case. 
 
+    Args:
+        token (str): the word to be found.
 
-# for app.py testing purposes
-def test_string(): 
-    return "String from playlist.py"
-
-# class Playlist():
-#     def __init__(self, spot):
-#         self.spot = spot
-#         self.user= spot.me()['id']
-#         self.name = "Test Playlist"
-#         self.description = "Test"
-
-#     def create_empty_playlist(self):
-#         new_playlist = spot.user_playlist_create(user=user, name=name, public=True, collaborative=False, description=description)
-#         return new_playlist["id"]
-#         print('\nPlaylist was created!\n')
-    
-#     def add_song(self, playlist_id, track):
-#         results = spot.search(q='track:' + track, type='track')
-#         if len(results['tracks']) > 0:
-#             topTrack = results['tracks']['items'][0]['uri']
-#             tracks = [topTrack]
-#         spot.user_playlist_add_tracks(user=user, playlist_id=playlist_id, tracks=tracks, position=None)
-#         print('\nSong was added!\n')
-
-
-# def add(user, playlist_id, name):
-#     results = spotify.search(q='track:' + name, type='track')
-#     if len(results['tracks']) > 0:
-#         topTrack = results['tracks']['items'][0]['uri']
-#     tracks = [topTrack]
-#     spotify.user_playlist_add_tracks(user=spotify.me()['id'], playlist_id=playlist_id, tracks=tracks, position=None)
+    Returns:
+        str: the track URI if the song was found
+        None: if the song was not found by checking the maximum amount of songs spotify allows 
+              OR if there were no results to start with. 
+    """
+    # CAN IMPLEMENT BAN CHECK IF TIME
+    # banned = ['love', 'loves', 'all', '2', 'alone', 'he', 'heart', 'never', 'boys', 'la', 'come', '3', 'but', 'up', 'little', 'that', 'one', 'fall', 'baby', 'we', 'were', 'you', 'the', 'say', 'summer', 'mind', 'this', 'eyes', 'hell', 'and', 'new', 'an', 'stay', 'have', 'his', 'had', 'see', 'from', 'ya', 'hey',  'miss', 'song', 'hers', 'her', 'it', 'girl', 'they', 'sad', 'to', 'feat.', 'me', 'im', 'she', 'go', 'happy', 'as', 'don\'t', 'can\'t', 'won\'t', 'u', 'been', 'time', 'are', 'what', 'better', 'keep', 'word', 'a', 'like', 'can', 'when', 'do', 'of', 'my', 'always', 'fuck', 'is', 'good', 'boy', 'dance', 'for', 'life', 'something', 'die', 'I', 'with', 'was', 'worse', 'not', 'cant', 'in', 'said', 'mine', 'at', 'or', 'someone', 'your', 'break', 'goodbye', '1', 'girls', 'yeah', 'ft.', 'by', 'money', 'wake', 'be', 'somewhere', 'yours', 'crush', 'on']
+    # banned = ['love'] 
+    # ban_suffix = " " + " NOT ".join(word for word in banned if word not in token.lower())
+    # print(token)
+    # print(ban_suffix)
+    for offset in range(0, 2000, 20):
+        tracks = spotify.search(q='track:' + token, type='track', offset=offset)['tracks']['items']
+        # print(f'number of results: {len(tracks)}')
+        if not tracks:
+            print("No songs were found.")
+            print(token)
+            return None
+        for track in tracks:
+            if track['name'].lower() == token.lower():
+                print('Song was found!')
+                print(track['name'])
+                print(offset)
+                return track['uri']
+    print("Exhausted offset.")
+    print(token)
+    return None
