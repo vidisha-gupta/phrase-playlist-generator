@@ -1,6 +1,8 @@
-from auth import spotify
+from auth import runAuth
 import time
 start_time = time.time()
+
+spotify = runAuth()
 
 def create_playlist(sentence):
     """Creates the phrase playlist.
@@ -11,6 +13,8 @@ def create_playlist(sentence):
     Returns:
         the uri of the generated phrase playlist.
     """ 
+    if not sentence: 
+        return None
     tokens = sentence.split(' ')
 
     # removes null results from songs list by checking whether token_to_song(token) would return None
