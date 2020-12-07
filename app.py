@@ -20,8 +20,9 @@ def main():
     link = ""
     output = ""
     if request.method == 'POST':
-        return request.form['phrase']
+        # return request.form['phrase']
         playlist_uri = create_playlist(request.form['phrase'])
+        return playlist_uri
         if not playlist_uri: 
             output = "No songs were found. Please try again."
         else:
