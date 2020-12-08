@@ -56,10 +56,9 @@ def token_to_song(token, spotify):
         print(f'Song: \'{token}\' was excluded from the search because it is a known non-existent song.')
         return None
 
-    banned_suffix = " " + " NOT ".join(word for word in banned)
+    banned_suffix = " NOT " + " NOT ".join(word for word in banned)
 
     for offset in range(0, 2000, 10):
-        # print(banned)
         tracks = spotify.search(q='track:' + token + banned_suffix, type='track', offset=offset)['tracks']['items']
         # print(f'number of results: {len(tracks)}')
         if not tracks:
