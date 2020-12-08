@@ -1,10 +1,7 @@
-from auth import runAuth
 import time
 start_time = time.time()
 
-spotify = runAuth()
-
-def create_playlist(sentence):
+def create_playlist(sentence, spotify):
     """Creates the phrase playlist.
 
     Args:
@@ -15,10 +12,18 @@ def create_playlist(sentence):
     """ 
     if not sentence: 
         return None
+    
     tokens = sentence.split(' ')
 
     # removes null results from songs list by checking whether token_to_song(token) would return None
-    songs = list(filter(None, map(token_to_song, tokens)))
+    # songs = list(filter(None, map(token_to_song, tokens, spotify)))
+    songs = []
+    print(spotify)
+    print(f"spotify user id: {spotify.me()['id']}")
+
+    for token in tokens: 
+        if token_to_song(token, spotify) is not None: 
+            songs.append(token_to_song(token, spotify))
 
     # if songs is not empty, create a playlist and add the songs array to the playlist
     if songs:
@@ -32,7 +37,7 @@ def create_playlist(sentence):
     print(f"Program took {time.time() - start_time} seconds")
         
 
-def token_to_song(token):
+def token_to_song(token, spotify):
     """Finds a song whose title is the token, ignoring case. 
 
     Args:

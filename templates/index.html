@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authenticate with Spotify</title>
+    <title>Spotify Phrase Playlist Generator</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <!-- Our styles -->
@@ -11,9 +11,18 @@
 </head>
 <body>
     <div class="container text-center">
-        <h1>Spotify Phrase Playlist Generator</h1>
-        <br>
-        <button class="btn btn-success btn-lg" type="submit">Click to Authenticate with Spotify</button>
-      </div>
-</body>
-</html>
+      <h1>Spotify Phrase Playlist Generator</h1>
+      <br>
+      <form method="POST">
+        <div class="form-group">
+          <label for="phrase">Phrase</label>
+          <textarea class="form-control" name="phrase" id="phrase" rows="3" placeholder="Your Phrase Here" minlength=2 maxlength=100 required style="width: 50%; margin: auto;"></textarea>
+        </div>
+        <button class="btn btn-success btn-lg" type="submit">Create a Playlist</button>
+      </form>
+      <h5>Ouput</h5>  
+      <p id="output">{{output}}</p>
+      <iframe src="{{link}}" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    </div>
+</body> 
+</html> 

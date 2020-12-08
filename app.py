@@ -1,44 +1,49 @@
 from flask import Flask, render_template, request, redirect, url_for
 from playlist import create_playlist
-from auth import runAuth
+from auth import run_auth, get_redirect_url
+import string
+import random
+
+# keep track of sessions
+sessions = {}
+# code for cookie generation: https://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits/23728630#23728630
+session_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(64))
 
 # create Flask app
 app = Flask(__name__, template_folder='templates')
+ 
+# login 
+@app.route('/', methods=['GET'])
+def login():
+    return redirect(get_redirect_url())
 
-# connects index.html with python script=
-# @app.route('/', methods=['POST', 'GET'])
-# def index():
-#     render_template('index.html')
-#     spot = runAuth()
-#     if spot: 
-#         return render_template('main.html', output="", link="", spotify=spot)
-#     return render_template('index.html')
+@app.route('/callback', methods=['GET'])
+def callback():
+    url = request.url
+    print(url)
+    # store the user information in session
+    sessions[session_id] = run_auth(url)
+    # while session_id not in sessions:
+    #     sessions[session_id] = run_auth(url)
 
-# connects main.html with python script
-@app.route('/', methods=['POST', 'GET'])
-def main():
+    return redirect('/index')
+
+# connects index.html with python script
+@app.route('/index', methods=['POST', 'GET'])
+def index():
     link = ""
     output = ""
+    
     if request.method == 'POST':
-        # return request.form['phrase']
-        playlist_uri = create_playlist(request.form['phrase'])
-        return playlist_uri
+        playlist_uri = create_playlist(request.form['phrase'], sessions[session_id])
         if not playlist_uri: 
             output = "No songs were found. Please try again."
         else:
             link = f"https://open.spotify.com/embed/playlist/{playlist_uri}"
             output = f"Your playlist was created! Some songs may be missing if they were not found."
-    # displays python output in HTML 
-    return render_template('main.html', output=output, link=link)
-
-# # prevent caching issues
-# @app.after_request
-# def add_header(response):
-#     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0, public'
-#     response.headers['Pragma'] = 'no-cache'
-#     response.headers['Expires'] = '0'
-#     return response
+    
+    return render_template('index.html', output=output, link=link)
 
 # run app
 if __name__ == '__main__':
-    app.run(debug=True)    
+    app.run(debug=True)
