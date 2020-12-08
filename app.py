@@ -14,10 +14,10 @@ from playlist import create_playlist
 load_dotenv()
 SPOTIPY_CLIENT_ID = os.environ.get('CLIENT_ID')
 SPOTIPY_CLIENT_SECRET= os.environ.get('CLIENT_SECRET')
-#SPOTIPY_REDIRECT_URI= os.environ.get('REDIRECT_URI')
+SPOTIPY_REDIRECT_URI= os.environ.get('REDIRECT_URI')
 
 # USE THE FOLLOWING REDIRECT URI IF RUNNING LOCALLY INSTEAD OF THE ONE ABOVE
-SPOTIPY_REDIRECT_URI = 'http://127.0.0.1:5000/callback'
+#SPOTIPY_REDIRECT_URI = 'http://127.0.0.1:5000/callback'
 
 API_BASE = 'https://accounts.spotify.com'
 
