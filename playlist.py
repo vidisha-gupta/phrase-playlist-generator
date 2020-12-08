@@ -29,8 +29,8 @@ def create_playlist(sentence, spotify):
     # if songs is not empty, create a playlist and add the songs array to the playlist
     if songs:
         # create an empty playlist
-        playlist = spotify.user_playlist_create(user=spotify.me()['id'], name="Your Phrase Playlist", public=True, collaborative=False, 
-                                                description="Created using the Spotify Phrase Playlist Generator: https://github.com/vidisha-gupta/phrase-playlist-generator.")
+        playlist = spotify.user_playlist_create(user=spotify.me()['id'], name='Your Phrase Playlist', public=True, collaborative=False, 
+                                                description='Created using the Spotify Phrase Playlist Generator: https://phrase-playlist-generator.herokuapp.com.')
         # add songs list to the playlist
         spotify.user_playlist_add_tracks(user=spotify.me()['id'], playlist_id=playlist['id'], tracks=songs, position=None)
         
@@ -50,21 +50,31 @@ def token_to_song(token, spotify):
         None: if the song was not found by checking the maximum amount of songs spotify allows 
               OR if there were no results to start with. 
     """
-    # CAN IMPLEMENT BAN CHECK IF TIME
-    # banned = ['love', 'loves', 'all', '2', 'alone', 'he', 'heart', 'never', 'boys', 'la', 'come', '3', 'but', 'up', 'little', 'that', 'one', 'fall', 'baby', 'we', 'were', 'you', 'the', 'say', 'summer', 'mind', 'this', 'eyes', 'hell', 'and', 'new', 'an', 'stay', 'have', 'his', 'had', 'see', 'from', 'ya', 'hey',  'miss', 'song', 'hers', 'her', 'it', 'girl', 'they', 'sad', 'to', 'feat.', 'me', 'im', 'she', 'go', 'happy', 'as', 'don\'t', 'can\'t', 'won\'t', 'u', 'been', 'time', 'are', 'what', 'better', 'keep', 'word', 'a', 'like', 'can', 'when', 'do', 'of', 'my', 'always', 'fuck', 'is', 'good', 'boy', 'dance', 'for', 'life', 'something', 'die', 'I', 'with', 'was', 'worse', 'not', 'cant', 'in', 'said', 'mine', 'at', 'or', 'someone', 'your', 'break', 'goodbye', '1', 'girls', 'yeah', 'ft.', 'by', 'money', 'wake', 'be', 'somewhere', 'yours', 'crush', 'on']
-    # banned = ['love'] 
-    # ban_suffix = " " + " NOT ".join(word for word in banned if word not in token.lower())
-    # print(token)
-    # print(ban_suffix)
+    banned = ['a', 'to', 'the']
+    
+    if token in banned: 
+        print(f'Song: \'{token}\' was excluded from the search because it is a known non-existent song.')
+        return None
+
+    banned_suffix = " " + " NOT ".join(word for word in banned)
+
     for offset in range(0, 2000, 10):
-        tracks = spotify.search(q='track:' + token, type='track', offset=offset)['tracks']['items']
+        # print(banned)
+        tracks = spotify.search(q='track:' + token + banned_suffix, type='track', offset=offset)['tracks']['items']
         # print(f'number of results: {len(tracks)}')
         if not tracks:
-            print(f"No songs were found for the search term {token}.")
+            print(f'No songs were found for the search term {token}.')
             return None
         for track in tracks:
             if track['name'].lower() == token.lower():
-                print(f'Song: {track["name"]} was found with an offset of {offset}!')
+                print(f'Song \'{track["name"]}\' was found with an offset of {offset}!')
                 return track['uri']
-    print(f"Song: {token} exhausted offset.")
+            else:
+                # reduce future search results by adding all words that were common the initial result to the banned list
+                words = track['name'].split(' ')
+                for word in words: 
+                    if word.lower() != token.lower():
+                        banned.append(word)
+                offset = 0
+    print(f'Song: \'{token}\' exhausted offset.')
     return None

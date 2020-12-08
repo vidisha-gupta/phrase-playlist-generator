@@ -1,17 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for, session, make_response
-import spotipy, os, requests, string, random
-import spotipy.util as util
+from flask import Flask, render_template, request, redirect, url_for, session
+import spotipy, os, requests
+#import spotipy.util as util
 from dotenv import load_dotenv
 from playlist import create_playlist
-from auth import run_auth, get_redirect_url
 
 # access secrets
 load_dotenv()
 SPOTIPY_CLIENT_ID = os.environ.get('CLIENT_ID')
 SPOTIPY_CLIENT_SECRET= os.environ.get('CLIENT_SECRET')
 SPOTIPY_REDIRECT_URI= os.environ.get('REDIRECT_URI')
-#SPOTIPY_REDIRECT_URI = 'http://127.0.0.1:5000/callback'
 
+# USE THE FOLLOWING REDIRECT URI IF RUNNING LOCALLY INSTEAD OF THE ONE ABOVE
+# SPOTIPY_REDIRECT_URI = 'http://127.0.0.1:5000/callback'
 
 API_BASE = 'https://accounts.spotify.com'
 
@@ -27,7 +27,7 @@ app.secret_key = os.environ.get('FLASK_KEY')
 @app.route("/")
 def login():
     auth_url = f'{API_BASE}/authorize?client_id={SPOTIPY_CLIENT_ID}&response_type=code&redirect_uri={SPOTIPY_REDIRECT_URI}&scope={SCOPE}'
-    # print(auth_url)
+    print(auth_url)
     return redirect(auth_url)
 
 # authorization-code-flow Step 2.
