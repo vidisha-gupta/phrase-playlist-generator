@@ -1,3 +1,6 @@
+# This file contains functions that interact with the Spotify API for non-authentication actions
+# such as creating a playlist and searching for songs
+
 import time
 start_time = time.time()
 
@@ -18,8 +21,6 @@ def create_playlist(sentence, spotify):
     # removes null results from songs list by checking whether token_to_song(token) would return None
     # songs = list(filter(None, map(token_to_song, tokens, spotify)))
     songs = []
-    print(spotify)
-    print(f"spotify user id: {spotify.me()['id']}")
 
     for token in tokens: 
         if token_to_song(token, spotify) is not None: 
@@ -32,9 +33,10 @@ def create_playlist(sentence, spotify):
                                                 description="Created using the Spotify Phrase Playlist Generator: https://github.com/vidisha-gupta/phrase-playlist-generator.")
         # add songs list to the playlist
         spotify.user_playlist_add_tracks(user=spotify.me()['id'], playlist_id=playlist['id'], tracks=songs, position=None)
+        
+        print(f"Program took {time.time() - start_time} seconds")
+        
         return playlist['uri'].replace("spotify:playlist:", "")
-
-    print(f"Program took {time.time() - start_time} seconds")
         
 
 def token_to_song(token, spotify):
@@ -54,19 +56,15 @@ def token_to_song(token, spotify):
     # ban_suffix = " " + " NOT ".join(word for word in banned if word not in token.lower())
     # print(token)
     # print(ban_suffix)
-    for offset in range(0, 2000, 20):
+    for offset in range(0, 2000, 10):
         tracks = spotify.search(q='track:' + token, type='track', offset=offset)['tracks']['items']
         # print(f'number of results: {len(tracks)}')
         if not tracks:
-            print("No songs were found.")
-            print(token)
+            print(f"No songs were found for the search term {token}.")
             return None
         for track in tracks:
             if track['name'].lower() == token.lower():
-                print('Song was found!')
-                print(track['name'])
-                print(offset)
+                print(f'Song: {track["name"]} was found with an offset of {offset}!')
                 return track['uri']
-    print("Exhausted offset.")
-    print(token)
+    print(f"Song: {token} exhausted offset.")
     return None
