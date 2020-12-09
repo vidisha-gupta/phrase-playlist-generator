@@ -1,0 +1,11 @@
+During this project, we learned how to use APIs (specifically the Spotify Web API), 
+how to use the ‘Spotipy’ library, got a refresher on Python, learned about the authorization flow, 
+how to use Flask, and integration with Heroku. We enjoyed developing our algorithm for finding songs 
+based on the user’s input, learning how to use the ‘Spotipy’ library, and collaborating with each other as a team. 
+The initial learning curve for figuring out how to use an API was very challenging, 
+as well as figuring out how to do user authentication using OAuth. One of our group members 
+also took on the task of learning Flask, so the new skill was a bit difficult for her to pick up on at first, 
+but there are many resources online that she found useful, such as the official documentation as well as YouTube tutorials. 
+We found the IPL to be extremely helpful for our learning and progress during this project, 
+since our TA, Jordan, was knowledgeable about Spotipy and the Spotify API. 
+His help allowed us to implement OAuth and to discover the Spotipy library which was critical to our project.
