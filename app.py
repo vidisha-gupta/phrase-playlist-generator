@@ -19,6 +19,7 @@ SPOTIPY_REDIRECT_URI= os.environ.get('REDIRECT_URI')
 # USE THE FOLLOWING REDIRECT URI IF RUNNING LOCALLY INSTEAD OF THE ONE ABOVE
 # SPOTIPY_REDIRECT_URI = 'http://127.0.0.1:5000/callback'
 
+# base url
 API_BASE = 'https://accounts.spotify.com'
 
 # the data we are requesting from the user
@@ -67,6 +68,8 @@ def index():
     if request.method == 'POST':
         # get token
         sp = spotipy.Spotify(auth=session['toke'])
+
+        # run python script
         playlist_uri = create_playlist(request.form['phrase'], sp)
 
         # update page with playlist embed and output message 
