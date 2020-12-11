@@ -1,5 +1,6 @@
 # Spotify Phrase Playlist Generator 
-This project takes in a phrase or sentence inputted as a user and creates a Spotify playlist where the songs spell the phrase.  
+Our CSE 143 final project takes in a phrase or sentence inputted as a user and creates a Spotify playlist where the songs spell the phrase.
+Click [here](https://www.youtube.com/watch?v=nPJYasz0glk&feature=youtu.be) to see our video presentation.
 
 # WEBSITE 
 To start using our website, first open your preferred browser and go to the following URL: [https://phrase-playlist-generator.herokuapp.com](https://phrase-playlist-generator.herokuapp.com/index). If it is your first time using the website, you will see a button to login in with your Spotify account. If you have a Spotify account, click on the button to open up Spotify’s authentication pop-up, which will show you which Spotify permissions are being requested, and allow you to log in to our website with Spotify. Once you are successfully logged in, you will be redirected to the main page of our website. 
